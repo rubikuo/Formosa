@@ -1,8 +1,9 @@
 import React from "react";
-import gql from "graphql-tag";
-import { Query } from "react-apollo";
+
+import { useQuery, gql } from "@apollo/client";
+
 const ABOUT_QUERY = gql`
-  query {
+  query GetAboutInfo {
     abouts {
       id
       image {
@@ -14,25 +15,21 @@ const ABOUT_QUERY = gql`
 `;
 
 const About = () => {
-  return (
-    <Query query={ABOUT_QUERY}>
-      {({ loading, error, data }) => {
-        if (loading) return <h1>Fetching data...</h1>;
-        if (error) return <h1>Error occured...</h1>;
+  const { loading, error, data } = useQuery(ABOUT_QUERY);
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  return (
+    <div>
+      {data.abouts.map((about) => {
         return (
-          <div>
-            {data.abouts.map((about) => {
-              return (
-                <div key={about.id}>
-                  <img src={about.image.url} alt="" />
-                </div>
-              );
-            })}
+          <div key={about.id}>
+            <img src={about.image.url} alt="" />
           </div>
         );
-      }}
-    </Query>
+      })}
+    </div>
   );
 };
 
