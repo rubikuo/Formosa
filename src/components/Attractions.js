@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { gql, useQuery, useLazyQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 
 const GET_ALL_PHOTOS = gql`
