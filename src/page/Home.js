@@ -5,8 +5,16 @@ import MenuCard from "../components/MenuCard";
 import styled from "styled-components";
 
 const CardGroup = styled.div`
-  width: 90%;
-  background-color: red;
+  width: 100%;
+  display: flex;
+  margin: 20px auto;
+  align-items: center;
+  height: 90vh;
+
+  a {
+    width: 30%;
+    display: inline-block;
+  }
 `;
 
 const HOME_QUERY = gql`
@@ -14,6 +22,10 @@ const HOME_QUERY = gql`
     homes {
       id
       title
+      image {
+        id
+        url
+      }
     }
   }
 `;
@@ -26,7 +38,6 @@ const Home = () => {
 
   return (
     <div>
-      <Link to="/about">ABOUT</Link>
       <CardGroup>
         {data.homes.map((home) => {
           return (
@@ -34,7 +45,7 @@ const Home = () => {
               key={home.id}
               to={home.title.toLowerCase().split(" ").join("-")}
             >
-              <MenuCard title={home.title} />
+              <MenuCard title={home.title} imageUrl={home.image.url} />
             </Link>
           );
         })}

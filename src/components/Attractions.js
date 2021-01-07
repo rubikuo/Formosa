@@ -6,6 +6,7 @@ import styled from "styled-components";
 const GET_ALL_PHOTOS = gql`
   query GetAllphotos {
     attractions {
+      title
       id
       image {
         id
@@ -32,6 +33,36 @@ const Container = styled.div`
   }
 `;
 
+const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  background-color: white;
+  margin: 15px;
+
+  align-items: center;
+  padding: 25px 0;
+  box-shadow: 2px 2px 3px 0px #757575;
+
+  img {
+    width: 300px;
+    height: 250px;
+    object-fit: cover;
+    box-shadow: 0px 0px 2px 0px rgb(80, 80, 80, 0.8);
+  }
+`;
+
+const CardBody = styled.div`
+  width: 100%;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+
+  p {
+    margin-top: 10px;
+  }
+`;
+
 const AttractionPhotos = ({ region }) => {
   const { loading, error, data } = useQuery(GET_ALL_PHOTOS);
   if (loading) return "Loading...";
@@ -46,12 +77,17 @@ const AttractionPhotos = ({ region }) => {
   ) {
     render = data.attractions.map((attraction) => {
       return (
-        <Link to={`/attractions/${attraction.id}`}>
-          <img
-            src={attraction.image.url}
-            key={attraction.image.id}
-            alt="picture"
-          />
+        <Link key={attraction.id} to={`/attractions/${attraction.id}`}>
+          <Card>
+            <img
+              src={attraction.image.url}
+              key={attraction.image.id}
+              alt={attraction.title}
+            />
+            <CardBody className="">
+              <h3>{attraction.title}</h3>
+            </CardBody>
+          </Card>
         </Link>
       );
     });
@@ -64,11 +100,16 @@ const AttractionPhotos = ({ region }) => {
       .map((attraction) => {
         return (
           <Link to={`/attractions/${attraction.id}`}>
-            <img
-              src={attraction.image.url}
-              key={attraction.image.id}
-              alt="picture"
-            />
+            <Card>
+              <img
+                src={attraction.image.url}
+                key={attraction.image.id}
+                alt={attraction.title}
+              />
+              <CardBody className="">
+                <h3>{attraction.title}</h3>
+              </CardBody>
+            </Card>
           </Link>
         );
       });
