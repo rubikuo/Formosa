@@ -5,6 +5,8 @@ import styled from "styled-components";
 
 const Label = styled.label`
   postion: relative;
+  display: inline-block;
+  margin-top: 10px;
 `;
 
 const RadioBtn = styled.input`
@@ -29,8 +31,10 @@ const UPDATE_FOOD = gql`
     }
   }
 `;
+
 const Rating = ({ foodId, foodRating }) => {
   const [updateFood] = useMutation(UPDATE_FOOD);
+  const [hover, setHover] = useState(0);
   const [ratings, setRatings] = useState(foodRating);
 
   return (
@@ -52,10 +56,16 @@ const Rating = ({ foodId, foodRating }) => {
                   },
                 });
               }}
+              onMouseEnter={() => {
+                setHover(ratingValue);
+              }}
+              onMouseLeave={() => {
+                setHover(0);
+              }}
             />
             <StarIcon
               className="star"
-              color={ratingValue <= ratings ? "#ffc107" : "#e4e5e9"}
+              color={ratingValue <= (hover || ratings) ? "#ffc107" : "#e4e5e9"}
               size={30}
             />
           </Label>

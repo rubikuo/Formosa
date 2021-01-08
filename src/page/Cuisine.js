@@ -67,11 +67,7 @@ const CardBody = styled.div`
 `;
 
 const Cuisine = () => {
-  // const [inputValue, setInputValue] = useState(0);
-  // const [rating, setRating] = useState(0);
   const { loading, error, data } = useQuery(GET_ALL_CUISINES);
-  // const [updateFood] = useMutation(UPDATE_FOOD);
-
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
   console.log(data.foods);
@@ -88,7 +84,6 @@ const Cuisine = () => {
               <img src={food.image.url} alt={food.title} />
               <CardBody className="">
                 <h3>{food.title}</h3>
-                <h3>{food.rating}</h3>
                 <Rating foodId={foodId} foodRating={food.rating} />
                 <p>{food.description}</p>
               </CardBody>
