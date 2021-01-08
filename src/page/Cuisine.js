@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Wrapper from "../components/Wrapper";
+import Rating from "../components/Rating";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import styled from "styled-components";
 
@@ -19,17 +20,8 @@ const GET_ALL_CUISINES = gql`
 `;
 
 const ADD_RATING = gql`
-  mutation AddRating($id: String!, $rating: Number!) {
+  mutation AddFood($id: String!, $rating: Int!) {
     addRating(id: $id, rating: $rating) {
-      id
-      rating
-    }
-  }
-`;
-
-const UPDATE_FOOD = gql`
-  mutation UpdateFood($where: FoodWhereUniqueInput!, $data: FoodUpdateInput!) {
-    updateFood(where: $where, data: $data) {
       id
       rating
     }
@@ -75,9 +67,10 @@ const CardBody = styled.div`
 `;
 
 const Cuisine = () => {
-  const [inputValue, setInputValue] = useState(0);
+  // const [inputValue, setInputValue] = useState(0);
+  // const [rating, setRating] = useState(0);
   const { loading, error, data } = useQuery(GET_ALL_CUISINES);
-  const [updateFood] = useMutation(UPDATE_FOOD);
+  // const [updateFood] = useMutation(UPDATE_FOOD);
 
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
@@ -89,13 +82,6 @@ const Cuisine = () => {
       <CardsCtn>
         {data.foods.map((food) => {
           let foodId = food.id;
-          console.log(foodId);
-          console.log(food.rating);
-
-          const updateValue = (e) => {
-            console.log("value", e.target.value);
-            setInputValue(parseInt(e.target.value));
-          };
 
           return (
             <Card key={food.id}>
@@ -103,27 +89,8 @@ const Cuisine = () => {
               <CardBody className="">
                 <h3>{food.title}</h3>
                 <h3>{food.rating}</h3>
+                <Rating foodId={foodId} foodRating={food.rating} />
                 <p>{food.description}</p>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-
-                    updateFood({
-                      variables: {
-                        data: { rating: inputValue },
-                        where: { id: foodId },
-                      },
-                    });
-                    setInputValue(0);
-                  }}
-                >
-                  <input
-                    type="number"
-                    value={inputValue}
-                    onChange={(e) => updateValue(e)}
-                  />
-                  <button type="submit">Update Rating</button>
-                </form>
               </CardBody>
             </Card>
           );
