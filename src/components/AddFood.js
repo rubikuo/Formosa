@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 // import { CREATE_FOOD } from "../GraphQL/Mutations";
+import { PUBLISH_ASSET } from "../GraphQL/Mutations";
 import { useMutation } from "@apollo/client";
+
 import axios from "axios";
 
 const AddFood = () => {
@@ -10,6 +12,7 @@ const AddFood = () => {
     rating: 0,
   });
   const [foodImg, setFoodImg] = useState(null);
+  const [publishAsset] = useMutation(PUBLISH_ASSET);
   // const [title, setTitle] = useState("");
   // const [fileName, setFileName] = useState(null);
   // const [desc, setDesc] = useState("");
@@ -42,7 +45,17 @@ const AddFood = () => {
           }
         )
         .then((res) => {
-          console.log(res);
+          console.log(res.data.id);
+          const imageId = res.data.id;
+          return imageId;
+        })
+        .then((id) => {
+          // when publishing assets there is no need to pass "to" variable here, only needs to define to in mutation
+          publishAsset({
+            variables: {
+              where: { id: id },
+            },
+          });
         })
         .catch((error) => {
           console.log(error);

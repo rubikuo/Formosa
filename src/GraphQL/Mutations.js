@@ -22,3 +22,14 @@ export const CREATE_FOOD = gql`
     }
   }
 `;
+
+export const PUBLISH_ASSET = gql`
+  mutation PublishAsset(
+    $where: AssetWhereUniqueInput!
+    $to: [Stage!]! = [PUBLISHED]
+  ) {
+    publishAsset(where: $where, to: $to) {
+      id
+    }
+  }
+`;
