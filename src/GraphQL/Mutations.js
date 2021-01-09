@@ -9,20 +9,6 @@ export const UPDATE_FOOD = gql`
   }
 `;
 
-export const CREATE_FOOD = gql`
-  mutation CreateFood($data: FoodCreateInput!) {
-    createFood(data: $data) {
-      id
-      title
-      image {
-        fileName
-      }
-      description
-      rating
-    }
-  }
-`;
-
 export const PUBLISH_ASSET = gql`
   mutation PublishAsset(
     $where: AssetWhereUniqueInput!
@@ -30,6 +16,19 @@ export const PUBLISH_ASSET = gql`
   ) {
     publishAsset(where: $where, to: $to) {
       id
+    }
+  }
+`;
+
+export const CREATE_FOOD = gql`
+  mutation CreateFood($data: FoodCreateInput!) {
+    createFood(data: $data) {
+      title
+      description
+      rating
+      image {
+        id
+      }
     }
   }
 `;

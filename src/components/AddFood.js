@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-// import { CREATE_FOOD } from "../GraphQL/Mutations";
+import { CREATE_FOOD } from "../GraphQL/Mutations";
 import { PUBLISH_ASSET } from "../GraphQL/Mutations";
 import { useMutation } from "@apollo/client";
 
@@ -13,6 +13,7 @@ const AddFood = () => {
   });
   const [foodImg, setFoodImg] = useState(null);
   const [publishAsset] = useMutation(PUBLISH_ASSET);
+  const [createFood] = useMutation(CREATE_FOOD);
   // const [title, setTitle] = useState("");
   // const [fileName, setFileName] = useState(null);
   // const [desc, setDesc] = useState("");
@@ -47,13 +48,33 @@ const AddFood = () => {
         .then((res) => {
           console.log(res.data.id);
           const imageId = res.data.id;
-          return imageId;
-        })
-        .then((id) => {
           // when publishing assets there is no need to pass "to" variable here, only needs to define to in mutation
           publishAsset({
             variables: {
-              where: { id: id },
+              where: { id: imageId },
+            },
+          });
+          return res.data;
+        })
+        .then((imageData) => {
+          console.log(imageData);
+          newFood.imageId = imageData.id;
+          newFood.imageFileName = imageData.filename;
+          const image_id = newFood.imageId;
+
+          // newFood.imageFile
+          console.log(newFood);
+
+          createFood({
+            variables: {
+              data: {
+                title: newFood.title,
+                description: newFood.description,
+                rating: newFood.rating,
+                image: {
+                  connect: { id: image_id },
+                },
+              },
             },
           });
         })
@@ -66,7 +87,8 @@ const AddFood = () => {
   const handleChange = (e) => {
     setFood((food) => ({
       ...food,
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.type === "number" ? parseInt(e.target.value) : e.target.value,
     }));
   };
 
