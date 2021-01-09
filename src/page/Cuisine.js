@@ -1,19 +1,10 @@
 import React, { useState } from "react";
 import Wrapper from "../components/Wrapper";
 import Rating from "../components/Rating";
-import { gql, useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_ALL_CUISINES } from "../GraphQL/Queries";
 import styled from "styled-components";
 import AddFood from "../components/AddFood";
-
-const ADD_RATING = gql`
-  mutation AddFood($id: String!, $rating: Int!) {
-    addRating(id: $id, rating: $rating) {
-      id
-      rating
-    }
-  }
-`;
 
 const CardsCtn = styled.div`
   width: 100%;
@@ -54,10 +45,16 @@ const CardBody = styled.div`
 `;
 
 const Cuisine = () => {
-  const { loading, error, data } = useQuery(GET_ALL_CUISINES);
+  const [food, setFood] = useState({
+    title: "",
+    description: "",
+    rating: 0,
+  });
+  // the data from useQuery cannot be stored in useState
+  const { loading, error, data, refetch } = useQuery(GET_ALL_CUISINES);
+
   if (loading) return "Loading...";
   if (error) return `Error! ${error.message}`;
-  console.log(data.foods);
 
   return (
     <Wrapper>
@@ -78,7 +75,7 @@ const Cuisine = () => {
           );
         })}
       </CardsCtn>
-      <AddFood />
+      <AddFood food={food} setFood={setFood} refetch={refetch} />
     </Wrapper>
   );
 };

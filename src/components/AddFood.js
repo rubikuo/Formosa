@@ -1,32 +1,24 @@
 import React, { useState, useRef } from "react";
-import { CREATE_FOOD } from "../GraphQL/Mutations";
-import { PUBLISH_ASSET } from "../GraphQL/Mutations";
+import { CREATE_FOOD, PUBLISH_ASSET, PUBLISH_FOOD } from "../GraphQL/Mutations";
 import { useMutation } from "@apollo/client";
-
 import axios from "axios";
 
-const AddFood = () => {
-  const [food, setFood] = useState({
-    title: "",
-    description: "",
-    rating: 0,
-  });
+const AddFood = ({ food, setFood, refetch }) => {
   const [foodImg, setFoodImg] = useState(null);
   const [publishAsset] = useMutation(PUBLISH_ASSET);
   const [createFood] = useMutation(CREATE_FOOD);
-  // const [title, setTitle] = useState("");
-  // const [fileName, setFileName] = useState(null);
-  // const [desc, setDesc] = useState("");
-  // const [rating, setRating] = useState(0);
+  const [publishFood] = useMutation(PUBLISH_FOOD);
+
   const fileInputRef = useRef(null);
+
   const submitFood = (e) => {
     console.log("hello");
     e.preventDefault();
-    const newFood = { ...food };
-    // console.log("newFood", newFood);
-    // console.log("before", foodImg);
+
+    const newFood = { ...food }; // clone state
+
     if (foodImg) {
-      console.log("after", foodImg);
+      // upload Photo with axios
       const imgFormData = new FormData();
       imgFormData.append("fileUpload", foodImg);
       axios
@@ -45,24 +37,23 @@ const AddFood = () => {
             },
           }
         )
+        // after upload image file publish Asset
         .then((res) => {
-          console.log(res.data.id);
+          console.log(res);
           const imageId = res.data.id;
           // when publishing assets there is no need to pass "to" variable here, only needs to define to in mutation
           publishAsset({
             variables: {
               where: { id: imageId },
             },
+            ignoreResults: false,
           });
           return res.data;
         })
+        // make post request with createFood Mutation
         .then((imageData) => {
-          console.log(imageData);
-          newFood.imageId = imageData.id;
-          newFood.imageFileName = imageData.filename;
-          const image_id = newFood.imageId;
-
-          // newFood.imageFile
+          newFood.image = imageData;
+          const image_id = newFood.image.id;
           console.log(newFood);
 
           createFood({
@@ -76,6 +67,20 @@ const AddFood = () => {
                 },
               },
             },
+            // after post requst, publishFood
+          }).then((res) => {
+            console.log("newfoodId", res.data.createFood);
+            newFood.id = res.data.createFood.id;
+            const newFoodId = newFood.id;
+
+            publishFood({
+              variables: {
+                where: { id: newFoodId },
+              },
+            }).then((res) => {
+              console.log("resFromFoodPublished", res);
+              refetch(); // after post graphql needs to refetch the data, otherwise the frontend wont update
+            });
           });
         })
         .catch((error) => {
@@ -96,20 +101,6 @@ const AddFood = () => {
     setFoodImg(e.target.files[0]);
   };
 
-  // const [createFood, { error }] = useMutation(CREATE_FOOD);
-
-  // const addFood = () =>
-  //   createFood({
-  //     variables: {
-  //       data: {
-  //         title: title,
-  //         fileName: fileName,
-  //         description: desc,
-  //         rating: rating,
-  //       },
-  //     },
-  //   });
-
   return (
     <form
       onSubmit={(e) => {
@@ -120,6 +111,7 @@ const AddFood = () => {
         type="text"
         placeholder="title"
         value={food.title}
+        required
         name="title"
         onChange={(e) => handleChange(e)}
       />
@@ -139,6 +131,7 @@ const AddFood = () => {
         placeholder="description"
         value={food.description}
         name="description"
+        required
         onChange={(e) => handleChange(e)}
       />
       <input

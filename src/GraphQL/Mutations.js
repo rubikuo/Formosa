@@ -23,11 +23,31 @@ export const PUBLISH_ASSET = gql`
 export const CREATE_FOOD = gql`
   mutation CreateFood($data: FoodCreateInput!) {
     createFood(data: $data) {
+      id
       title
       description
       rating
       image {
         id
+        url
+      }
+    }
+  }
+`;
+
+export const PUBLISH_FOOD = gql`
+  mutation PublishFood(
+    $where: FoodWhereUniqueInput!
+    $to: [Stage!]! = [PUBLISHED]
+  ) {
+    publishFood(where: $where, to: $to) {
+      id
+      title
+      description
+      rating
+      image {
+        id
+        url
       }
     }
   }
