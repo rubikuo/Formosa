@@ -2,22 +2,9 @@ import React, { useState } from "react";
 import Wrapper from "../components/Wrapper";
 import Rating from "../components/Rating";
 import { gql, useQuery, useMutation } from "@apollo/client";
+import { GET_ALL_CUISINES } from "../GraphQL/Queries";
 import styled from "styled-components";
-
-const GET_ALL_CUISINES = gql`
-  query GetAllCuisines {
-    foods {
-      id
-      title
-      description
-      rating
-      image {
-        id
-        url
-      }
-    }
-  }
-`;
+import AddFood from "../components/AddFood";
 
 const ADD_RATING = gql`
   mutation AddFood($id: String!, $rating: Int!) {
@@ -91,6 +78,7 @@ const Cuisine = () => {
           );
         })}
       </CardsCtn>
+      <AddFood />
     </Wrapper>
   );
 };

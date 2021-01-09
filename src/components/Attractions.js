@@ -1,24 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_PHOTOS } from "../GraphQL/Queries";
 import styled from "styled-components";
-
-const GET_ALL_PHOTOS = gql`
-  query GetAllphotos {
-    attractions {
-      title
-      id
-      image {
-        id
-        fileName
-        url
-      }
-      region {
-        title
-      }
-    }
-  }
-`;
 
 const Container = styled.div`
   width: 100%;

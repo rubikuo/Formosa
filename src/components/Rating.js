@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { UPDATE_FOOD } from "../GraphQL/Mutations";
 import styled from "styled-components";
 
 const Label = styled.label`
@@ -21,15 +22,6 @@ const RadioBtn = styled.input`
 const StarIcon = styled(FaStar)`
   cursor: pointer;
   transition: color 200ms;
-`;
-
-const UPDATE_FOOD = gql`
-  mutation UpdateFood($where: FoodWhereUniqueInput!, $data: FoodUpdateInput!) {
-    updateFood(where: $where, data: $data) {
-      id
-      rating
-    }
-  }
 `;
 
 const Rating = ({ foodId, foodRating }) => {

@@ -1,21 +1,8 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import Wrapper from "../components/Wrapper";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { GET_DETAIL } from "../GraphQL/Queries";
 import styled from "styled-components";
-
-const GET_DETAIL = gql`
-  query GetDetail($id: ID!) {
-    attraction(where: { id: $id }) {
-      id
-      image {
-        url
-      }
-      title
-      description
-    }
-  }
-`;
 
 const DetailPage = styled.div`
   width: 100%;

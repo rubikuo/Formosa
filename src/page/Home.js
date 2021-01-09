@@ -1,5 +1,6 @@
 import React from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { HOME_QUERY } from "../GraphQL/Queries";
 import { Link } from "react-router-dom";
 import MenuCard from "../components/MenuCard";
 import styled from "styled-components";
@@ -14,19 +15,6 @@ const CardGroup = styled.div`
   a {
     width: 30%;
     display: inline-block;
-  }
-`;
-
-const HOME_QUERY = gql`
-  query GetHomeInfo {
-    homes {
-      id
-      title
-      image {
-        id
-        url
-      }
-    }
   }
 `;
 
