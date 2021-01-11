@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaSortAmountDown } from "react-icons/fa";
 import { useMutation } from "@apollo/client";
 import { UPDATE_FOOD } from "../GraphQL/Mutations";
 import styled from "styled-components";
@@ -24,7 +24,7 @@ const StarIcon = styled(FaStar)`
   transition: color 200ms;
 `;
 
-const Rating = ({ foodId, foodRating }) => {
+const Rating = ({ foodId, foodRating, valueFrom, food, setFood }) => {
   const [updateFood] = useMutation(UPDATE_FOOD);
   const [hover, setHover] = useState(0);
   const [ratings, setRatings] = useState(foodRating);
@@ -38,15 +38,19 @@ const Rating = ({ foodId, foodRating }) => {
             <RadioBtn
               type="radio"
               name="rating"
-              value={ratings}
+              value={valueFrom === "cuisine" ? ratings : food.rating}
               onClick={() => {
-                setRatings(ratingValue);
-                updateFood({
-                  variables: {
-                    data: { rating: ratingValue },
-                    where: { id: foodId },
-                  },
-                });
+                if (valueFrom === "cuisine") {
+                  setRatings(ratingValue);
+                  updateFood({
+                    variables: {
+                      data: { rating: ratingValue },
+                      where: { id: foodId },
+                    },
+                  });
+                } else {
+                  setFood({ ...food, rating: ratingValue });
+                }
               }}
               onMouseEnter={() => {
                 setHover(ratingValue);
@@ -57,7 +61,15 @@ const Rating = ({ foodId, foodRating }) => {
             />
             <StarIcon
               className="star"
-              color={ratingValue <= (hover || ratings) ? "#ffc107" : "#e4e5e9"}
+              color={
+                valueFrom === "cuisine"
+                  ? ratingValue <= (hover || ratings)
+                    ? "#ffc107"
+                    : "#e4e5e9"
+                  : ratingValue <= (hover || food.rating)
+                  ? "#ffc107"
+                  : "#e4e5e9"
+              }
               size={30}
             />
           </Label>

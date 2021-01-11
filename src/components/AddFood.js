@@ -2,8 +2,71 @@ import React, { useState, useRef } from "react";
 import { CREATE_FOOD, PUBLISH_ASSET, PUBLISH_FOOD } from "../GraphQL/Mutations";
 import { useMutation } from "@apollo/client";
 import axios from "axios";
+import styled from "styled-components";
+import Rating from "../components/Rating";
 
-const AddFood = ({ food, setFood, refetch }) => {
+const AddForm = styled.form`
+  width: 30%;
+  box-shadow: 0px 2px 14px 4px rgba(115, 115, 115, 1);
+  border-radius: 7px;
+  position: absolute;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  background-color: #f0f0f0;
+  transition: left 0.8s linear;
+
+  input,
+  textarea,
+  button {
+    width: 80%;
+    margin: 5px auto;
+    padding: 10px;
+  }
+
+  input[type="text"] {
+    height: 35px;
+  }
+
+  textarea {
+    height: 80px;
+    resize: none;
+  }
+
+  input[type="submit"] {
+    background-color: #85b4d3;
+    border: none;
+    :hover {
+      background-color: #2d9fe7;
+    }
+  }
+
+  button {
+    border: none;
+    color: #535353;
+  }
+`;
+
+const RatingWrapper = styled.div`
+  position: relative;
+  input[type="number"] {
+    position: absolute;
+    top: 0;
+    display: none;
+  }
+`;
+
+const AddFood = ({
+  food,
+  setFood,
+  refetch,
+  scrollValue,
+  slideToRight,
+  setSlideToRight,
+}) => {
   const [foodImg, setFoodImg] = useState(null);
   const [publishAsset] = useMutation(PUBLISH_ASSET);
   const [createFood] = useMutation(CREATE_FOOD);
@@ -81,6 +144,7 @@ const AddFood = ({ food, setFood, refetch }) => {
               console.log("resFromFoodPublished", res);
               refetch(); // after post graphql needs to refetch the data, otherwise the frontend wont update
             });
+            setSlideToRight(false);
           });
         })
         .catch((error) => {
@@ -102,47 +166,69 @@ const AddFood = ({ food, setFood, refetch }) => {
   };
 
   return (
-    <form
+    <AddForm
+      style={
+        slideToRight
+          ? { top: `${scrollValue + 200}px`, left: 0 }
+          : { top: `${scrollValue + 200}px`, left: "-30%" }
+      }
       onSubmit={(e) => {
         submitFood(e);
       }}
     >
       <input
         type="text"
-        placeholder="title"
+        placeholder="Title"
         value={food.title}
         required
         name="title"
         onChange={(e) => handleChange(e)}
       />
 
-      <input
-        type="number"
-        placeholder="rating"
-        value={parseInt(food.rating)}
-        name="rating"
-        min={0}
-        max={5}
-        required
-        onChange={(e) => handleChange(e)}
-      />
-      <input
+      <RatingWrapper>
+        <Rating
+          className="rating"
+          valueFrom="addFood"
+          food={food}
+          setFood={setFood}
+        />
+
+        <input
+          type="number"
+          placeholder="Rating"
+          value={parseInt(food.rating)}
+          name="rating"
+          min={0}
+          max={5}
+          required
+          onChange={(e) => handleChange(e)}
+        />
+      </RatingWrapper>
+      <textarea
         type="text"
-        placeholder="description"
+        placeholder="Description"
         value={food.description}
         name="description"
         required
         onChange={(e) => handleChange(e)}
       />
       <input
-        style={{ display: "none" }}
         type="file"
         ref={fileInputRef}
         onChange={(e) => handleSelectedFile(e)}
       />
-      <button onClick={() => fileInputRef.current.click()}>Choose Image</button>
-      <input type="submit" value="Add" />
-    </form>
+
+      <input type="submit" value="Add Food" />
+      <button
+        type="button"
+        onClick={() => {
+          setSlideToRight(false);
+          setFood({ ...food, title: "", description: "", rating: 0 });
+        }}
+      >
+        Cancel
+      </button>
+    </AddForm>
   );
 };
 

@@ -11,6 +11,11 @@ const Card = style.div`
    justify-content: center;
    background-color: white;
    margin: 10px;
+   box-shadow: 1px 2px 6px 5px rgba(85, 85, 85, 0.2);
+   :hover{
+     background-color: rgb(20, 32, 107);
+     color: white;
+   }
 
    img{
      width: 100%;

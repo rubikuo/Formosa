@@ -6,17 +6,27 @@ import styled from "styled-components";
 
 const DetailPage = styled.div`
   width: 100%;
+  min-height: calc(100% - 10vh);
+  background-color: white;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 100px;
+  flex-wrap: wrap;
 `;
 
 const Image = styled.img`
-  width: 300px;
-  height: 300px;
+  width: 350px;
+  height: 350px;
+  margin: 20px auto 40px auto;
+  border-radius: 2%;
 `;
 
 const Container = styled.div`
-  width: 40%;
+  width: 350px;
+  padding: 20px 10px;
   max-width: 400px;
+  font-weight: 500;
 `;
 
 const AttractionDetail = () => {
@@ -32,7 +42,7 @@ const AttractionDetail = () => {
     <DetailPage>
       <Image src={data.attraction.image.url} alt="" />
       <Container>
-        <h2>{data.attraction.title}</h2>
+        <h2 style={{ marginBottom: "30px" }}>{data.attraction.title}</h2>
         <p>{data.attraction.description}</p>
       </Container>
     </DetailPage>

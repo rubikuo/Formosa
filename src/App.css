@@ -6,20 +6,20 @@
 
 main {
   width: 100%;
+  min-height: calc(100% - 10vh);
   display: flex;
   justify-content: center;
   background: linear-gradient(
       0deg,
-      rgba(129, 141, 153, 0.671),
-      rgba(227, 227, 228, 0.719)
+      rgba(185, 185, 185, 0.856),
+      rgba(230, 230, 241, 0.856)
     ),
-    url("https://i.pinimg.com/originals/5d/5c/30/5d5c30677e5e250e1b91f5ff44d32ae4.jpg");
+    url("https://c.share.photo.xuite.net/tigercat_0327/1ccf528/7082354/273154230_m.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
   background-color: rgba(177, 177, 177, 0.605);
-  text-shadow: 1px 1px 2px rgb(250, 250, 250);
 }
 
 a {

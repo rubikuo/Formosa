@@ -4,7 +4,7 @@ import Home from "./page/Home";
 import About from "./page/About";
 import Attraction from "./page/Attraction";
 import AttractionDetail from "./page/AttractionDetail";
-import Cuisine from "./page/Cuisine";
+import Food from "./page/Food";
 import Header from "./components/Header";
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
         <Route path="/about-taiwan" component={About} />
         <Route exact path="/attractions" component={Attraction} />
         <Route path="/attractions/:id" component={AttractionDetail} />
-        <Route path="/gourmet-cuisine" component={Cuisine} />
+        <Route path="/food" component={Food} />
       </main>
     </Router>
   );

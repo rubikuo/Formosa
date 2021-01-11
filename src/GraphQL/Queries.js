@@ -13,6 +13,22 @@ export const HOME_QUERY = gql`
   }
 `;
 
+export const ABOUT_QUERY = gql`
+  query GetAboutInfo {
+    abouts {
+      id
+      image {
+        id
+        url
+      }
+      language
+      population
+      religion
+      general
+    }
+  }
+`;
+
 export const GET_ALL_PHOTOS = gql`
   query GetAllphotos {
     attractions {

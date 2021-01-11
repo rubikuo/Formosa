@@ -54,11 +54,7 @@ const AttractionPhotos = ({ region }) => {
   console.log(data.attractions);
   let render;
 
-  if (
-    region === "Select Region" &&
-    data !== null &&
-    data.attractions !== null
-  ) {
+  if (region === "All Regions" && data !== null && data.attractions !== null) {
     render = data.attractions.map((attraction) => {
       return (
         <Link key={attraction.id} to={`/attractions/${attraction.id}`}>
